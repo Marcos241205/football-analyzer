@@ -1,38 +1,35 @@
-import os
 import requests
 
 def main():
-    # Leer variables de entorno
-    api_url = os.getenv("API_URL")
-    api_key = os.getenv("API_KEY_PROYECTO")
+    print("⚽ Buscador de jugadores - TheSportsDB")
+    player_name = input("Ingrese el nombre del jugador: ")
 
-    if not api_url or not api_key:
-        print("❌ Error: faltan variables de entorno API_URL o API_KEY_PROYECTO")
-        return
-
-    # Endpoint de ejemplo: información de un equipo
-    endpoint = f"{api_url}/teams?id=33"  # ID 33 = Manchester United (ejemplo)
-    headers = {
-        "x-rapidapi-key": api_key,
-        "x-rapidapi-host": "api-football-v1.p.rapidapi.com"
-    }
+    url = f"https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p={player_name}"
 
     try:
-        response = requests.get(endpoint, headers=headers, timeout=10)
-        response.raise_for_status()  # lanza excepción si el status != 200
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
         data = response.json()
 
-        # Mostrar datos clave
-        team = data.get("response", [{}])[0].get("team", {})
-        print("✅ Conexión exitosa a la API")
-        print(f"Equipo: {team.get('name')}")
-        print(f"País: {team.get('country')}")
-        print(f"Fundado en: {team.get('founded')}")
+        players = data.get("player")
+        if not players:
+            print("❌ No se encontraron jugadores con ese nombre.")
+            return
+
+        player = players[0]  # muestra el primero encontrado
+        print("\n✅ Datos del jugador:")
+        print(f"Nombre: {player.get('strPlayer')}")
+        print(f"Equipo actual: {player.get('strTeam')}")
+        print(f"Nacionalidad: {player.get('strNationality')}")
+        print(f"Posición: {player.get('strPosition')}")
+        print(f"Fecha de nacimiento: {player.get('dateBorn')}")
+        print(f"Descripción: {player.get('strDescriptionEN')[:200]}...")  # resumen
 
     except requests.exceptions.Timeout:
-        print("⏱ Error: la solicitud a la API tardó demasiado.")
+        print("⏱ Error: la solicitud tardó demasiado.")
     except requests.exceptions.RequestException as e:
         print(f"❌ Error en la solicitud: {e}")
 
 if __name__ == "__main__":
     main()
+
