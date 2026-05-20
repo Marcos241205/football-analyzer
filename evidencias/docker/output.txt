@@ -1,0 +1,40 @@
+🔨 Construyendo la imagen Docker...
+Sending build context to Docker daemon  91.14kB
+Step 1/7 : FROM python:3.10
+ ---> 64384d9dc8be
+Step 2/7 : WORKDIR /app
+ ---> Using cache
+ ---> ead14759191e
+Step 3/7 : COPY requirements.txt .
+ ---> Using cache
+ ---> c24ec40b575c
+Step 4/7 : COPY app.py .
+ ---> Using cache
+ ---> 493ee0b6af16
+Step 5/7 : RUN python3 -m pip install --upgrade pip --progress-bar off
+ ---> Using cache
+ ---> 5d804db5f472
+Step 6/7 : RUN pip install --no-cache-dir --progress-bar off -r requirements.txt
+ ---> Using cache
+ ---> a76fd62afe20
+Step 7/7 : CMD ["python3", "app.py"]
+ ---> Using cache
+ ---> 2f93634ec76c
+Successfully built 2f93634ec76c
+Successfully tagged football-analyzer:latest
+🚀 Ejecutando el contenedor...
+⚽ Buscador de jugadores - TheSportsDB
+Ingrese el nombre del jugador: Lionel messi
+
+✅ Datos del jugador:
+Nombre: Lionel Messi
+Equipo actual: Inter Miami
+Nacionalidad: Argentina
+Posición: Right Winger
+Fecha de nacimiento: 1987-06-24
+Traceback (most recent call last):
+  File "/app/app.py", line 34, in <module>
+    main()
+  File "/app/app.py", line 26, in main
+    print(f"Descripción: {player.get('strDescriptionEN')[:200]}...")  # resumen
+TypeError: 'NoneType' object is not subscriptable
